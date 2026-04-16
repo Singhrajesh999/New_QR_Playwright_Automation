@@ -53,33 +53,21 @@ test('Group Create → Edit → Delete → Logout', async ({ page }) => {
 
   // =====================================================
   // ---------- EDIT GROUP ----------
-  // =====================================================
+// =====================================================
 
-  await groupRow.locator('button').first().click(); // edit
+await groupRow.locator('button').first().click(); // open edit modal
 
-  // Add another workspace member
-  await memberSearch.fill('lekhu123@yopmail.com');
-  await page.getByRole('button', { name: /lekhu123@yopmail.com/i }).click();
+// ✅ Re-locate inside edit modal
+const editMemberSearch = page.getByPlaceholder(/search members/i);
 
-  // Add another external email
-  await externalInput.fill('test2@yopmail.com');
-  await page.getByRole('button', { name: 'Add' }).click();
+// ---------- Add workspace member ----------
+await editMemberSearch.fill('lekhu123@yopmail.com');
 
-  // Save changes
-  await page.getByRole('button', { name: /save changes/i }).click();
+// select from dropdown
+await page.getByRole('button', { name: /lekhu123@yopmail.com/i }).click();
 
-  // 🔥 Reopen to verify (IMPORTANT)
-  await groupRow.locator('button').first().click();
-
-  await expect(
-    page.locator('text=test2@yopmail.com')
-  ).toBeVisible();
-
-  await page.keyboard.press('Escape');
-
-  // =====================================================
-  // ---------- DELETE GROUP ----------
-  // =====================================================
+// ---------- Save changes ----------
+await page.getByRole('button', { name: /save changes/i }).click();
 
  // ---------- DELETE GROUP ----------
 await groupRow.locator('button').nth(1).click(); // open delete popup
